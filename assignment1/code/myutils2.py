@@ -206,7 +206,7 @@ def read_vecs(path: str):
     # and create a tensor, or create and empty tensor
     # and add a row to it in each line with torch.cat?
     
-    for i in range(2000):#range(voc_size):
+    for i in range(voc_size):
         line=f.readline().split()
         if not line:
             f.close()
