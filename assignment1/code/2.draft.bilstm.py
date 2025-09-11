@@ -30,8 +30,19 @@ class LSTMModel(torch.nn.Module):
             Vocabulary size of output space (i.e. number of labels).
         """
         super(LSTMModel, self).__init__()
-        self.word_embeddings = torch.nn.Embedding(vocab_dim, embed_dim)
-        self.word_embeddings.from_pretrained(embeds)
+
+        # Append unlearned rows for new words
+        extension_n = vocab_dim - embeds.shape[0]
+        extension = torch.empty((extension_n, 100), dtype=torch.float32)
+        embeds2 = torch.cat((embeds, extension))
+
+        #self.word_embeddings = torch.nn.Embedding(vocab_dim, embed_dim)
+        self.word_embeddings = torch.nn.Embedding.from_pretrained(embeds2)
+        print(self.word_embeddings)
+
+        #print('Shape of embeds2: ', embeds2.shape)
+        #print('Shape of the vocab: ', vocab_dim)
+        #print('Shape of embeddings: ', embeds.shape[0])
         
         self.lstm = torch.nn.LSTM(embed_dim, lstm_dim, bidirectional=True, batch_first=True)
         self.hidden_to_label = torch.nn.Linear(lstm_dim * 2, num_labels)
