@@ -21,7 +21,7 @@ class BertModel(torch.nn.Module):
         Model for classification with transformers.
 
         The architecture of this model is simple, we just have a transformer
-        based language model, and add one linear layer to converts it output
+        based language model, and add one linear layer to convert its output
         to our prediction.
     
         Parameters
@@ -110,6 +110,8 @@ def convert_data(texts: List[str], tokenizer: AutoTokenizer, max_len: int):
     mask = torch.zeros_like(text_feats)
     for lineIdx, word_idcs in enumerate(all_data):
         mask[lineIdx][:len(word_idcs)] = 1
+    print(text_feats[0])
+    print(mask[0])
     return text_feats, mask
 
 if __name__ == '__main__':
@@ -133,6 +135,7 @@ if __name__ == '__main__':
     train_labels = torch.tensor(train_labels)
     train_features, train_masks = convert_data(train_texts, tokenizer, args.max_len)
 
+    exit()
     train_feats_batches = myutils.to_batch(train_features, args.batch_size)
     train_mask_batches = myutils.to_batch(train_masks, args.batch_size)
     train_labels_batches = myutils.to_batch(train_labels, args.batch_size)
